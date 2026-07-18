@@ -107,7 +107,6 @@ const ScrollRevealText = ({ text, className = "" }: { text: string, className?: 
   );
 };
 
-// Wrapper for staggered card entrance
 const FeatureCard = ({ children, delay, className = "h-full" }: { children: React.ReactNode, delay: number, className?: string }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -130,18 +129,158 @@ const FeatureCard = ({ children, delay, className = "h-full" }: { children: Reac
   );
 };
 
+// --- MODAL COMPONENT ---
+
+const ProjectModal = ({ project, onClose }: { project: any, onClose: () => void }) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = 'auto'; };
+  }, []);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12 bg-black/80 backdrop-blur-xl"
+    >
+      <div className="absolute inset-0" onClick={onClose}></div>
+      
+      <motion.div 
+        initial={{ y: 50, scale: 0.95, opacity: 0 }}
+        animate={{ y: 0, scale: 1, opacity: 1 }}
+        exit={{ y: 20, scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-6xl max-h-[90vh] bg-[#0a0a0a] border border-white/10 rounded-2xl md:rounded-[2rem] overflow-y-auto shadow-2xl flex flex-col"
+      >
+        {/* Header Modal */}
+        <div className="sticky top-0 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5 p-6 md:px-12 flex justify-between items-center z-10">
+          <div>
+            <span className="text-gray-500 font-mono text-sm block mb-1">{project.id}</span>
+            <h2 className="text-2xl md:text-3xl font-medium text-primary">{project.title}</h2>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-2 bg-[#151515] border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label="Cerrar detalles del proyecto"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Content Modal */}
+        <div className="p-6 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
+          
+          {/* Columna Izquierda: Contexto y Detalles */}
+          <div className="lg:col-span-7 space-y-12">
+            {project.details?.problem && (
+              <section>
+                <h3 className="text-xl text-white mb-4 font-serif italic">El Desafío</h3>
+                <p className="text-gray-400 leading-relaxed">{project.details.problem}</p>
+              </section>
+            )}
+            
+            {project.details?.solution && (
+              <section>
+                <h3 className="text-xl text-white mb-4 font-serif italic">La Solución</h3>
+                <p className="text-gray-400 leading-relaxed">{project.details.solution}</p>
+              </section>
+            )}
+
+            {project.details?.features && (
+              <section>
+                <h3 className="text-xl text-white mb-4 font-serif italic">Funcionalidades Clave</h3>
+                <ul className="space-y-4">
+                  {project.details.features.map((feature: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary/70 shrink-0 mt-0.5" />
+                      <span className="text-gray-300">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
+
+          {/* Columna Derecha: Stack y Enlaces */}
+          <div className="lg:col-span-5 space-y-10">
+            <div className="bg-[#111111] border border-white/5 rounded-2xl p-8">
+              <h3 className="text-lg text-white mb-6 font-serif italic">Stack Tecnológico</h3>
+              <div className="flex flex-wrap gap-2">
+                {project.details?.stack ? (
+                  project.details.stack.map((tech: string, idx: number) => (
+                    <span key={idx} className="px-3 py-1.5 bg-black border border-white/10 text-primary/80 text-xs sm:text-sm rounded-md">
+                      {tech}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-gray-500 text-sm">Información en construcción...</span>
+                )}
+              </div>
+            </div>
+
+            {project.details?.repos && (
+              <div className="bg-[#111111] border border-white/5 rounded-2xl p-8 space-y-4">
+                <h3 className="text-lg text-white mb-6 font-serif italic">Repositorios y Enlaces</h3>
+                
+                {project.details.repos.frontend && (
+                  <a href={project.details.repos.frontend} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true">
+                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                      <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                    </svg>
+                    <span className="text-sm font-medium">Frontend (React/Vite)</span>
+                  </a>
+                )}
+                {project.details.repos.backend && (
+                  <a href={project.details.repos.backend} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true">
+                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                      <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                    </svg>
+                    <span className="text-sm font-medium">Backend (Spring Boot)</span>
+                  </a>
+                )}
+                {project.details.repos.api && (
+                  <a href={project.details.repos.api} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true">
+                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                      <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                    </svg>
+                    <span className="text-sm font-medium">Microservicio IA (Python)</span>
+                  </a>
+                )}
+                {project.details?.demo && (
+                  <a href={project.details.demo} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-primary hover:text-white transition-colors group mt-6 pt-6 border-t border-white/10">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    <span className="text-sm font-medium">Ver Proyecto en Vivo</span>
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+
 // --- MAIN APP ---
 
 function App() {
   const customEase: [number, number, number, number] = [0.16, 1, 0.3, 1];
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("Perfil"); // Estado para la píldora activa
-  const navItems = ["Perfil", "Experiencia", "Proyectos", "Habilidades", "Contacto"];
+  const [activeTab, setActiveTab] = useState("Perfil"); 
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
 
-  // Inicializamos la instancia de Lenis
   const lenis = useLenis(); 
 
-  // Función que intercepta el clic y hace el scroll suave
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: string) => {
     e.preventDefault(); 
     setActiveTab(item); 
@@ -150,15 +289,12 @@ function App() {
     const targetId = `#${item.toLowerCase()}`;
     
     if (lenis) {
-      // offset: -96 compensa el espacio del navbar fijo para que no tape el título
       lenis.scrollTo(targetId, { offset: -96, duration: 1.2 });
     } else {
       document.querySelector(targetId)?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  // Scroll-spy: mantiene la píldora activa sincronizada con la sección
-  // visible aunque el usuario no haga clic en el nav, sino que scrollee.
   useEffect(() => {
     const sections = navItems
       .map((item) => document.getElementById(item.toLowerCase()))
@@ -180,32 +316,52 @@ function App() {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const navItems = ["Perfil", "Experiencia", "Proyectos", "Habilidades", "Contacto"];
 
   const featureCards = [
     {
       id: "01",
       title: "WebLanding Suite.",
       icon: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171918_4a5edc79-d78f-4637-ac8b-53c43c220606.png&w=1280&q=85",
-      items: ["Plataforma SaaS para landing pages", "Integración de IA (Gemini, ChatGPT)", "Despliegue y arquitectura escalable", "Optimización de procesos"]
+      items: ["Plataforma SaaS para landing pages", "Integración de IA (Gemini, ChatGPT)", "Despliegue y arquitectura escalable"],
+      details: {
+        problem: "Los microemprendedores necesitan presencia digital para vender, pero a menudo carecen de conocimientos técnicos para programar o presupuesto para contratar agencias de diseño a medida. El proceso tradicional es lento y costoso.",
+        solution: "Desarrollé una plataforma SaaS integral que democratiza el acceso web. Utilizando IA generativa, el sistema permite a cualquier usuario crear landing pages modernas, personalizadas y funcionales en cuestión de minutos, gestionando desde el diseño hasta el almacenamiento en la nube.",
+        features: [
+          "Generación automatizada de contenido y estructura web mediante APIs de Inteligencia Artificial (FastAPI/Python).",
+          "Dashboard administrativo completo para la gestión de usuarios, suscripciones y logs de sistema.",
+          "Sistema de subida y optimización de imágenes integrado con Cloudinary.",
+          "Seguridad robusta mediante autenticación JWT y encriptación de datos.",
+          "Arquitectura de microservicios separando la lógica de negocio (Java) del motor de IA (Python)."
+        ],
+        stack: ["React", "Vite", "Tailwind CSS", "Java", "Spring Boot", "Python", "FastAPI", "PostgreSQL", "Cloudinary", "JWT Auth", "Playwright"],
+        repos: {
+          frontend: "https://github.com/S0CRAM53/WLSuiteFrontend-main",
+          backend: "https://github.com/S0CRAM53/Landingbackend-main",
+          api: "https://github.com/S0CRAM53/WLSuitePythonAPI-main"
+        }
+      }
     },
     {
       id: "02",
       title: "Healflow Analytics.",
       icon: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171741_ed9845ab-f5b2-4018-8ce7-07cc01823522.png&w=1280&q=85",
-      items: ["Gestión de métricas hospitalarias", "Dashboards interactivos con KPIs", "Python, PostgreSQL y Chart.js"]
+      items: ["Gestión de métricas hospitalarias", "Dashboards interactivos con KPIs", "Python, PostgreSQL y Chart.js"],
+      details: null 
     },
     {
       id: "03",
       title: "OnlyKick App.",
       icon: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171809_f56666dc-c099-4778-ad82-9ad4f209567b.png&w=1280&q=85",
-      items: ["E-commerce nativo de zapatillas", "Desarrollo en Kotlin", "UI/UX con Jetpack Compose"]
+      items: ["E-commerce nativo de zapatillas", "Desarrollo en Kotlin", "UI/UX con Jetpack Compose"],
+      details: null 
     }
   ];
 
   const skills = [
-    { category: "Lenguajes & Frameworks", tools: ["Kotlin", "Python (Django, FastAPI)", "Java (Spring Boot)", "JavaScript"] },
+    { category: "Lenguajes & Frameworks", tools: ["Kotlin", "Python (Django, FastAPI)", "Java (Spring Boot)", "JavaScript", "React"] },
     { category: "Bases de Datos", tools: ["PostgreSQL", "NeonDB", "MongoDB", "SQL Developer"] },
     { category: "Herramientas & APIs", tools: ["Git", "GitHub", "Android Studio", "Render", "APIs REST"] },
   ];
@@ -215,17 +371,19 @@ function App() {
   return (
     <div className="bg-black min-h-screen text-[#E1E0CC] selection:bg-primary selection:text-black">
       
-      {/* NAVBAR */}
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+        )}
+      </AnimatePresence>
+
       <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full flex justify-center px-4 md:px-0 pt-4 md:pt-6">
-        
-        {/* Desktop / tablet: Pill Navigation */}
         <nav
           aria-label="Navegación principal"
           className="hidden sm:flex bg-[#0a0a0a]/90 backdrop-blur-md border border-white/10 rounded-full p-1.5 items-center shadow-2xl"
         >
           {navItems.map((item) => {
             const isActive = activeTab === item;
-            
             return (
               <a
                 key={item}
@@ -248,9 +406,8 @@ function App() {
           })}
         </nav>
 
-        {/* Mobile: botón hamburguesa */}
         <div className="sm:hidden w-full flex justify-between items-center bg-black/90 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-3 shadow-2xl">
-          <span className="text-sm font-medium text-[#E1E0CC]">Marcos Orellana</span>
+          <span className="text-sm font-medium text-[#E1E0CC]">Marco Orellana</span>
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
@@ -332,7 +489,7 @@ function App() {
                     <a
                       href="/Marco_orellana_CV.pdf"
                       download
-                      aria-label="Descargar currículum de Marcos Orellana en PDF"
+                      aria-label="Descargar currículum de Marco Orellana en PDF"
                       className="group flex items-center justify-between bg-primary text-black rounded-full pl-6 pr-2 py-2 w-max gap-8 transition-all hover:gap-12 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                     >
                       <span className="font-medium text-sm sm:text-base">Descargar CV</span>
@@ -370,7 +527,7 @@ function App() {
           
           <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl max-w-4xl mx-auto leading-[0.95] sm:leading-[0.9] mb-12">
             <WordsPullUpMultiStyle segments={[
-              { text: "Soy Marcos Orellana, ", className: "font-normal" },
+              { text: "Soy Marco Orellana, ", className: "font-normal" },
               { text: "Desarrollador Full-Stack. ", className: "font-serif italic text-primary" },
               { text: "Especializado en APIs, apps móviles y dashboards analíticos.", className: "font-normal" }
             ]} />
@@ -394,8 +551,6 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-            
-            {/* Experiencia Columna (Solo TI) */}
             <div className="space-y-12">
               <FeatureCard delay={0.1} className="">
                 <div className="border-l border-white/10 pl-6 relative">
@@ -413,7 +568,6 @@ function App() {
               </FeatureCard>
             </div>
 
-            {/* Educación Columna */}
             <div className="space-y-12">
               <FeatureCard delay={0.2} className="">
                 <div className="border-l border-white/10 pl-6 relative">
@@ -453,7 +607,6 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:h-[450px]">
             
-            {/* Feature Cards 1-3: Projects */}
             {featureCards.map((card, idx) => (
               <FeatureCard key={card.id} delay={0.15 + (idx * 0.15)}>
                 <div className="bg-[#111111] border border-white/5 hover:border-primary/20 transition-colors rounded-2xl p-8 h-full flex flex-col justify-between min-h-[350px]">
@@ -480,14 +633,17 @@ function App() {
                     </ul>
                   </div>
                   
-                  <a
-                    href="#"
+                  <button
+                    onClick={() => {
+                      if(card.details) setSelectedProject(card);
+                      else alert("Los detalles de este proyecto se actualizarán pronto.");
+                    }}
                     aria-label={`Ver detalles del proyecto ${card.title}`}
                     className="inline-flex items-center gap-2 text-primary/80 text-sm font-medium mt-10 group w-max hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
                     Ver detalles
                     <ArrowRight className="w-4 h-4 -rotate-45 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true" />
-                  </a>
+                  </button>
                 </div>
               </FeatureCard>
             ))}
@@ -577,7 +733,7 @@ function App() {
               href="https://www.linkedin.com/in/marcos-orellana-428124241/"
               target="_blank"
               rel="noreferrer"
-              aria-label="Visitar perfil de LinkedIn de Marcos Orellana"
+              aria-label="Visitar perfil de LinkedIn de Marco Orellana"
               className="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <div className="w-10 h-10 rounded-full bg-[#151515] border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors">
@@ -587,14 +743,14 @@ function App() {
                   <circle cx="4" cy="4" r="2"></circle>
                 </svg>
               </div>
-              <span className="text-sm">Marcos Orellana</span>
+              <span className="text-sm">Marco Orellana</span>
             </a>
 
             <a
               href="https://github.com/S0CRAM53"
               target="_blank"
               rel="noreferrer"
-              aria-label="Visitar perfil de GitHub de Marcos Orellana"
+              aria-label="Visitar perfil de GitHub de Marco Orellana"
               className="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors group rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <div className="w-10 h-10 rounded-full bg-[#151515] border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-colors">
@@ -609,7 +765,7 @@ function App() {
           </div>
 
           <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-400">
-            <p>© {new Date().getFullYear()} Marcos Orellana Aguirre. Todos los derechos reservados.</p>
+            <p>© {new Date().getFullYear()} Marco Orellana Aguirre. Todos los derechos reservados.</p>
             <p>Construido con React, Tailwind v4 & Framer Motion.</p>
           </div>
         </div>
