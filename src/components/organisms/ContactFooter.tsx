@@ -50,7 +50,7 @@ const ContactFooter = () => {
                 <circle cx="4" cy="4" r="2"></circle>
               </svg>
             </div>
-            <span className="text-sm">Marco Orellana</span>
+            <span className="text-sm">Marcos Orellana</span>
           </a>
 
           <a

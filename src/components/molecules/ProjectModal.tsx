@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X } from 'lucide-react';
 import type { ProjectCard } from '../../data/portfolioData';
+import Lightbox from './Lightbox';
+import ProjectVideo from './ProjectVideo';
 
 interface ProjectModalProps {
   project: ProjectCard;
@@ -9,6 +11,8 @@ interface ProjectModalProps {
 }
 
 const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = 'auto'; };
@@ -24,6 +28,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
       <div className="absolute inset-0" onClick={onClose}></div>
 
       <motion.div
+        data-lenis-prevent
         initial={{ y: 50, scale: 0.95, opacity: 0 }}
         animate={{ y: 0, scale: 1, opacity: 1 }}
         exit={{ y: 20, scale: 0.95, opacity: 0 }}
@@ -50,6 +55,13 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 
           {/* Columna Izquierda: Contexto y Detalles */}
           <div className="lg:col-span-7 space-y-12">
+            {project.details?.demoVideo && (
+              <ProjectVideo
+                src={project.details.demoVideo}
+                title={project.title}
+              />
+            )}
+
             {project.details?.problem && (
               <section>
                 <h3 className="text-xl text-white mb-4 font-serif italic">El Desafío</h3>
@@ -142,7 +154,33 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
           </div>
 
         </div>
+
+        {/* Galería de Capturas */}
+        {project.details?.screenshots && project.details.screenshots.length > 0 && (
+          <div className="px-6 md:px-12 pb-10 md:pb-12">
+            <h3 className="text-xl text-white mb-6 font-serif italic">Capturas del Proyecto</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {project.details.screenshots.map((src, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setLightbox(src)}
+                  aria-label={`Ampliar captura ${idx + 1} de ${project.title}`}
+                  className="group relative rounded-xl overflow-hidden border border-white/10 hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <img
+                    src={src}
+                    alt={`Captura de pantalla ${idx + 1} de ${project.title}`}
+                    loading="lazy"
+                    className="w-full h-44 sm:h-48 object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </motion.div>
+
+      {lightbox && <Lightbox src={lightbox} onClose={() => setLightbox(null)} />}
     </motion.div>
   );
 };

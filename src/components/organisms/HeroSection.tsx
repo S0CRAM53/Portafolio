@@ -14,7 +14,7 @@ const HeroSection = () => {
           src={heroVideo}
           autoPlay loop muted playsInline
           aria-hidden="true"
-          poster="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171918_4a5edc79-d78f-4637-ac8b-53c43c220606.png&w=1280&q=85"
+          poster=""
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 noise-overlay opacity-[0.7] mix-blend-overlay pointer-events-none"></div>
@@ -36,7 +36,7 @@ const HeroSection = () => {
                 transition={{ delay: 0.5, duration: 0.8, ease: customEase }}
                 className="text-primary/80 text-sm md:text-base leading-relaxed"
               >
-                Analista Programador Computacional especializado en la creación de APIs RESTful, arquitecturas escalables y soluciones digitales que impulsan el futuro tecnológico.
+                Analista Programador Computacional recién titulado, con experiencia práctica construyendo APIs RESTful, apps móviles y dashboards de datos — desde la idea hasta el despliegue en producción.
               </motion.p>
 
               <motion.div
@@ -46,7 +46,7 @@ const HeroSection = () => {
                 className="flex flex-col gap-4"
               >
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  
+
                   <a
                     href="/Marco_orellana_CV.pdf"
                     download
