@@ -116,9 +116,34 @@ export const featureCards: ProjectCard[] = [
 ];
 
 export const skills: SkillGroup[] = [
-  { category: "Lenguajes & Frameworks", tools: ["Kotlin", "Python (Django, FastAPI)", "Java (Spring Boot)", "JavaScript", "React"] },
-  { category: "Bases de Datos", tools: ["PostgreSQL", "NeonDB", "MongoDB", "SQL Developer"] },
-  { category: "Herramientas & APIs", tools: ["Git", "GitHub", "Android Studio", "Render", "APIs REST"] },
+  {
+    category: "Lenguajes",
+    tools: ["Java", "Python", "JavaScript", "TypeScript", "SQL", "Kotlin"],
+    // ↑ Si decides no mostrar el proyecto móvil, elimina "Kotlin" de esta lista.
+  },
+  {
+    category: "Backend & APIs",
+    tools: ["Spring Boot", "Spring Security", "Django REST Framework", "FastAPI", "APIs REST", "JWT", "Swagger/OpenAPI"],
+  },
+  {
+    category: "Frontend",
+    tools: ["React", "Vite", "React Router", "Tailwind CSS", "Bootstrap", "Chart.js", "Three.js", "Framer Motion"],
+  },
+  {
+    category: "Bases de Datos",
+    tools: ["PostgreSQL", "MongoDB", "NeonDB", "Oracle SQL Developer", "Modelado relacional"],
+  },
+  {
+    category: "Testing & Calidad",
+    tools: ["Karma", "Jasmine", "Playwright", "ESLint", "Mockito", "Junit5"],
+  },
+  {
+    category: "Herramientas & Despliegue",
+    tools: ["Git", "GitHub (Git Flow)", "Render", "Cloudinary", "Android Studio", "Jetpack Compose"],
+  },
 ];
 
-export const languages: string[] = ["Español (Nativo)", "Inglés (Básico - Intermedio)"];
+export const languages: string[] = [
+  "Español (Nativo)",
+  "Inglés Intermedio (lectura de documentación técnica)",
+];
