@@ -107,8 +107,8 @@ export const featureCards: ProjectCard[] = [
       ],
       stack: ["React", "Vite", "React Router", "Chart.js", "Three.js", "Django", "Django REST Framework", "PostgreSQL", "Render"],
       repos: {
-        frontend: "PEGA_AQUÍ_TU_URL_DE_GITHUB_FRONTEND",
-        backend: "PEGA_AQUÍ_TU_URL_DE_GITHUB_BACKEND"
+        frontend: "https://github.com/S0CRAM53/hsjmelipilla/tree/main",
+        backend: "https://github.com/S0CRAM53/api-hsjmelipilla"
       },
       screenshots: [healflowDashboard, healflowRem, healflowCalculadora]
     }
