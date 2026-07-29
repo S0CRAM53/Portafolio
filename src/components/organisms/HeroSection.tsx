@@ -67,7 +67,7 @@ const HeroSection = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
 
                   <a
-                    href="/Marco_orellana_CV.pdf"
+                    href="/Marcos_Orellana_CV.pdf"
                     download
                     aria-label="Descargar currículum de Marcos Orellana en PDF"
                     className="group flex items-center justify-between bg-primary text-black rounded-full pl-6 pr-2 py-2 w-max gap-8 transition-all hover:gap-12 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black"
