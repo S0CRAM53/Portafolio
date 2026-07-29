@@ -22,13 +22,32 @@ const HeroSection = () => {
 
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-16">
           <div className="grid grid-cols-12 gap-6 items-end">
+
             <div className="col-span-12 lg:col-span-8">
+              {/* H1 real e indexable. Se mantiene oculto visualmente porque
+                  el texto visible ya lo comunica en dos niveles tipográficos. */}
+              <h1 className="sr-only">
+                Marcos Orellana Aguirre — Desarrollador Full-Stack
+              </h1>
+
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.25, duration: 0.8, ease: customEase }}
+                aria-hidden="true"
+                className="text-primary/75 text-xs sm:text-sm md:text-base font-medium tracking-[0.22em] uppercase mb-2 md:mb-3"
+              >
+                Marcos Orellana
+              </motion.p>
+
               <WordsPullUp
+                as="p"
                 text="Full-Stack"
                 showAsterisk={true}
                 className="text-[24vw] sm:text-[22vw] md:text-[20vw] lg:text-[16vw] xl:text-[15vw] font-medium leading-[0.85] tracking-[-0.07em]"
               />
             </div>
+
             <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 md:gap-8 pb-4 md:pb-6">
               <motion.p
                 initial={{ y: 20, opacity: 0 }}

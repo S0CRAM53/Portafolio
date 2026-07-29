@@ -1,17 +1,29 @@
 import { useRef } from 'react';
 import { motion, useInView, useReducedMotion, type Variants } from 'framer-motion';
 
+type PullUpTag = 'div' | 'h1' | 'h2' | 'h3' | 'p' | 'span';
+
 interface WordsPullUpProps {
   text: string;
   className?: string;
   showAsterisk?: boolean;
+  /** Tag semántico del contenedor. Por defecto 'div' para no alterar usos existentes. */
+  as?: PullUpTag;
 }
 
-const WordsPullUp = ({ text, className = "", showAsterisk = false }: WordsPullUpProps) => {
+const WordsPullUp = ({
+  text,
+  className = "",
+  showAsterisk = false,
+  as = 'div',
+}: WordsPullUpProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
   const prefersReducedMotion = useReducedMotion();
   const words = text.split(" ");
+
+  // motion.div | motion.h1 | ... resuelto en runtime sin duplicar el JSX.
+  const MotionTag = motion[as];
 
   const container: Variants = {
     hidden: { opacity: prefersReducedMotion ? 1 : 0 },
@@ -27,7 +39,7 @@ const WordsPullUp = ({ text, className = "", showAsterisk = false }: WordsPullUp
   };
 
   return (
-    <motion.div
+    <MotionTag
       ref={ref}
       variants={container}
       initial="hidden"
@@ -42,7 +54,7 @@ const WordsPullUp = ({ text, className = "", showAsterisk = false }: WordsPullUp
           )}
         </motion.span>
       ))}
-    </motion.div>
+    </MotionTag>
   );
 };
 
